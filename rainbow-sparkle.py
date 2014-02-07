@@ -16,8 +16,24 @@ class RSGlobals:
     time = 0
     objects = getObjects()
     window_id = 0
+    left_held = False
+    right_held = False
+    up_held = False
+    down_held = False
+
+def updateFromKeyboard():
+    if RSGlobals.up_held:
+        RSGlobals.zoom = max(RSGlobals.zoom-1, 1)
+    if RSGlobals.down_held:
+        RSGlobals.zoom = min(RSGlobals.zoom+1, 50)
+    if RSGlobals.left_held:
+        RSGlobals.angle += 5
+    if RSGlobals.right_held:
+        RSGlobals.angle -= 5
 
 def display():
+    updateFromKeyboard()
+    
     glLoadIdentity()
     glClearColor(0, 0, 0, 0)
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
@@ -64,13 +80,24 @@ def keyboard(key, x, y):
 
 def special(key, x, y):
     if key == GLUT_KEY_UP:
-        RSGlobals.zoom = max(RSGlobals.zoom-1, 1)
+        RSGlobals.up_held = True
     elif key == GLUT_KEY_DOWN:
-        RSGlobals.zoom = min(RSGlobals.zoom+1, 50)
+        RSGlobals.down_held = True
     elif key == GLUT_KEY_LEFT:
-        RSGlobals.angle += 5
+        RSGlobals.left_held = True
     elif key == GLUT_KEY_RIGHT:
-        RSGlobals.angle -= 5
+        RSGlobals.right_held = True
+    glutPostRedisplay()
+
+def specialUp(key, x, y):
+    if key == GLUT_KEY_UP:
+        RSGlobals.up_held = False
+    elif key == GLUT_KEY_DOWN:
+        RSGlobals.down_held = False
+    elif key == GLUT_KEY_LEFT:
+        RSGlobals.left_held = False
+    elif key == GLUT_KEY_RIGHT:
+        RSGlobals.right_held = False
     glutPostRedisplay()
 
 if __name__ == "__main__":
@@ -83,6 +110,7 @@ if __name__ == "__main__":
     glutReshapeFunc(reshape)
     glutKeyboardFunc(keyboard)
     glutSpecialFunc(special)
+    glutSpecialUpFunc(specialUp)
     glutIdleFunc(display)
     glutMainLoop()
 
