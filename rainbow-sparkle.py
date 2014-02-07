@@ -15,6 +15,7 @@ class RSGlobals:
     angle = 0
     time = 0
     objects = getObjects()
+    window_id = 0
 
 def display():
     glLoadIdentity()
@@ -56,24 +57,32 @@ def reshape(width, height):
     glShadeModel(GL_SMOOTH)
 
 def keyboard(key, x, y):
-    if (key == GLUT_KEY_UP):
+    if key == b'\x1b': # ESC
+        glutDestroyWindow(RSGlobals.window_id)
+        sys.exit(0)
+    glutPostRedisplay()
+
+def special(key, x, y):
+    if key == GLUT_KEY_UP:
         RSGlobals.zoom = max(RSGlobals.zoom-1, 1)
-    elif (key == GLUT_KEY_DOWN):
+    elif key == GLUT_KEY_DOWN:
         RSGlobals.zoom = min(RSGlobals.zoom+1, 50)
-    elif (key == GLUT_KEY_LEFT):
+    elif key == GLUT_KEY_LEFT:
         RSGlobals.angle += 5
-    elif (key == GLUT_KEY_RIGHT):
+    elif key == GLUT_KEY_RIGHT:
         RSGlobals.angle -= 5
+    glutPostRedisplay()
 
 if __name__ == "__main__":
     glutInit(sys.argv)
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
     glutInitWindowSize(640, 640)
-    glutCreateWindow(b"Hello, Kate")
+    RSGlobals.window_id = glutCreateWindow(b"Hello, Kate")
     
     glutDisplayFunc(display)
     glutReshapeFunc(reshape)
-    glutSpecialFunc(keyboard)
+    glutKeyboardFunc(keyboard)
+    glutSpecialFunc(special)
     glutIdleFunc(display)
     glutMainLoop()
 
