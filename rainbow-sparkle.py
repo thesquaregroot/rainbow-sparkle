@@ -7,14 +7,14 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
-def getSparkles():
+def getObjects():
     return [Sparkle(), Rainbow()]
 
 class RSGlobals:
     zoom = 25
     angle = 0
     time = 0
-    sparkles = getSparkles()
+    objects = getObjects()
 
 def display():
     glLoadIdentity()
@@ -31,8 +31,8 @@ def display():
     gluLookAt(0, 0, -RSGlobals.zoom, 0, 0, 0, 0, 1, 0)
     glRotatef(-RSGlobals.angle, 0, 1, 0)
     
-    for sparkle in RSGlobals.sparkles:
-        sparkle.render()
+    for obj in RSGlobals.objects:
+        obj.render()
     
     RSGlobals.time = time + 1
     glutSwapBuffers()
