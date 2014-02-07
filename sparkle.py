@@ -2,11 +2,11 @@ from OpenGL.GL import *
 from OpenGL.GLUT import glutSolidSphere
 
 class Sparkle:
-    WHITE   = [1, 1, 1, 1]
-    RED     = [1, 0, 0, 1]
-    GREEN   = [0, 1, 0, 1]
-    YELLOW  = [1, 1, 0, 1]
-    BLUE    = [0, 0, 1, 1]
+    WHITE   = [  1,    1,   1, 1]
+    GOLD    = [  1,  0.5,   0, 1]
+    GREEN   = [0.1,    1, 0.1, 1]
+    YELLOW  = [  1,    1,   0, 1]
+    SILVER  = [0.7,  0.7, 0.7, 1]
     amb_and_diff_prop = [0.7, 0.7, 0.7, 1.0]
     specular_prop     = [0.8, 0.8, 0.8, 1.0]
 
@@ -25,13 +25,13 @@ class Sparkle:
     
     def nextColor(self):
         if self.color == Sparkle.WHITE:
-            self.color = Sparkle.RED
-        elif self.color == Sparkle.RED:
+            self.color = Sparkle.GOLD
+        elif self.color == Sparkle.GOLD:
             self.color = Sparkle.YELLOW
         elif self.color == Sparkle.YELLOW:
             self.color = Sparkle.GREEN
         elif self.color == Sparkle.GREEN:
-            self.color = Sparkle.BLUE
+            self.color = Sparkle.SILVER
         else:
             self.color = Sparkle.WHITE
 

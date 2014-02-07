@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 import sys
+from rainbow import *
 from sparkle import *
 from math import sin, cos, radians
 from OpenGL.GL import *
@@ -7,11 +8,12 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
 def getSparkles():
-    return [Sparkle()]
+    return [Sparkle(), Rainbow()]
 
 class RSGlobals:
     zoom = 25
     angle = 0
+    time = 0
     sparkles = getSparkles()
 
 def display():
@@ -19,12 +21,20 @@ def display():
     glClearColor(0, 0, 0, 0)
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
     
-    gluLookAt(0, 0, RSGlobals.zoom, 0, 0, 0, 0, 1, 0)
+    time = RSGlobals.time
+    light_angle = time*15
+
+    glPushMatrix()
+    glLightfv(GL_LIGHT0, GL_POSITION, [cos(radians(light_angle)), 0, sin(radians(light_angle)), 0])
+    glPopMatrix()
+    
+    gluLookAt(0, 0, -RSGlobals.zoom, 0, 0, 0, 0, 1, 0)
     glRotatef(-RSGlobals.angle, 0, 1, 0)
     
     for sparkle in RSGlobals.sparkles:
         sparkle.render()
     
+    RSGlobals.time = time + 1
     glutSwapBuffers()
 
 def reshape(width, height):
