@@ -12,7 +12,8 @@ def getObjects():
 
 class RSGlobals:
     zoom = 25
-    angle = 0
+    xangle = 0
+    yangle = 0
     time = 0
     objects = getObjects()
     window_id = 0
@@ -23,13 +24,13 @@ class RSGlobals:
 
 def updateFromKeyboard():
     if RSGlobals.up_held:
-        RSGlobals.zoom = max(RSGlobals.zoom-1, 1)
+        RSGlobals.yangle += 5
     if RSGlobals.down_held:
-        RSGlobals.zoom = min(RSGlobals.zoom+1, 50)
+        RSGlobals.yangle -= 5
     if RSGlobals.left_held:
-        RSGlobals.angle += 5
+        RSGlobals.xangle += 5
     if RSGlobals.right_held:
-        RSGlobals.angle -= 5
+        RSGlobals.xangle -= 5
 
 def display():
     updateFromKeyboard()
@@ -38,15 +39,17 @@ def display():
     glClearColor(0, 0, 0, 0)
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
     
-    time = RSGlobals.time
-    light_angle = time*15
-
-    glPushMatrix()
-    glLightfv(GL_LIGHT0, GL_POSITION, [cos(radians(light_angle)), 0, sin(radians(light_angle)), 0])
-    glPopMatrix()
-    
     gluLookAt(0, 0, -RSGlobals.zoom, 0, 0, 0, 0, 1, 0)
-    glRotatef(-RSGlobals.angle, 0, 1, 0)
+    glRotatef(RSGlobals.xangle, 0, 1, 0)
+    glRotatef(-RSGlobals.yangle, cos(radians(RSGlobals.xangle)), 0, sin(radians(RSGlobals.xangle)))
+
+    time = RSGlobals.time
+    glLightfv(GL_LIGHT0, GL_POSITION, [0, 0, 1, 0])
+    glLightfv(GL_LIGHT0, GL_AMBIENT,  [1, 1, 1, 1])
+    glLightfv(GL_LIGHT0, GL_DIFFUSE,  [1, 1, 1, 1])
+    glLightfv(GL_LIGHT0, GL_SPECULAR, [1, 1, 1, 1])
+    glEnable(GL_LIGHT0)
+    glEnable(GL_LIGHTING)
     
     for obj in RSGlobals.objects:
         obj.render()
@@ -65,11 +68,6 @@ def reshape(width, height):
     glLoadIdentity()
     
     glEnable(GL_DEPTH_TEST)
-    glLightfv(GL_LIGHT0, GL_POSITION, [1, 1, 1, 0])
-    glLightfv(GL_LIGHT0, GL_DIFFUSE,  [1, 1, 1, 1])
-    glLightfv(GL_LIGHT0, GL_SPECULAR, [1, 1, 1, 1])
-    glEnable(GL_LIGHT0)
-    glEnable(GL_LIGHTING)
     glShadeModel(GL_SMOOTH)
 
 def keyboard(key, x, y):
@@ -98,6 +96,10 @@ def specialUp(key, x, y):
         RSGlobals.left_held = False
     elif key == GLUT_KEY_RIGHT:
         RSGlobals.right_held = False
+    elif key == GLUT_KEY_PAGE_UP:
+        RSGlobals.zoom = max(1, RSGlobals.zoom - 1)
+    elif key == GLUT_KEY_PAGE_DOWN:
+        RSGlobals.zoom = min(25, RSGlobals.zoom + 1)
     glutPostRedisplay()
 
 if __name__ == "__main__":
