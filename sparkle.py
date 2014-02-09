@@ -15,10 +15,27 @@ class Sparkle:
     def render(self, i=0, j=0, k=0):
         glPushMatrix()
         glTranslatef(i, j, k)
-        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, [i*j for i,j in zip(self.color, Sparkle.bright_amb_and_diff)])
-        glMaterialfv(GL_FRONT, GL_SPECULAR,            [i*j for i,j in zip(self.color, Sparkle.bright_specular)])
-        glMaterialfv(GL_FRONT, GL_SHININESS, [80])
+        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, [i*j for i,j in zip(self.color, Sparkle.bright_amb_and_diff)])
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,            [i*j for i,j in zip(self.color, Sparkle.bright_specular)])
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, [80])
         glScalef(0.004, 0.004, 0.004)
-        glutSolidIcosahedron()
+        glRotatef(15*self.frame, 1, 0, 0)
+        glRotatef(10*self.frame, 0, 1, 0)
+        glRotatef( 5*self.frame, 0, 0, 1)
+        glBegin(GL_TRIANGLES)
+        #tringle1
+        glVertex3f( 1,  1,  0)
+        glVertex3f( 1,  0,  1)
+        glVertex3f( 0,  1,  1)
+        #tringle2
+        glVertex3f( 0,  0,  1)
+        glVertex3f( 1,  0,  0)
+        glVertex3f( 0,  1,  0)
+        #tringle2
+        glVertex3f( 0,  1,  1)
+        glVertex3f( 1,  0,  0)
+        glVertex3f( 0,  1,  0)
+        glEnd()
         glPopMatrix()
+        self.frame += 1
 
