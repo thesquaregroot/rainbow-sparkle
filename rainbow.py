@@ -6,7 +6,7 @@ class Rainbow:
     DEFAULT_INNER_RADIUS = 0.05
     DEFAULT_OUTER_RADIUS = 0.15
     DEFAULT_DEPTH = 0.01
-    DEFAULT_OPACITY = 1
+    DEFAULT_OPACITY = 0.8
     RESOLUTION_ANGLE = 1
     
     RED = [1, 0, 0]
@@ -14,7 +14,7 @@ class Rainbow:
     YELLOW = [1, 1, 0]
     GREEN = [0, 1, 0]
     BLUE = [0, 0, 1]
-    PURPLE = [1, 0, 1]
+    PURPLE = [0, 1, 1]
 
     COLORS = [RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE]
 
@@ -29,7 +29,7 @@ class Rainbow:
         red = float((max_angle-angle)*color[0] + (angle+1)*next_color[0])/max_angle
         grn = float((max_angle-angle)*color[1] + angle*next_color[1])/max_angle
         blu = float((max_angle-angle)*color[2] + angle*next_color[2])/max_angle
-        glColor3f(red, grn, blu)
+        glColor4f(red, grn, blu, self.opacity)
 #        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, [red, grn, blu, self.opacity])
 #        glMaterialfv(GL_FRONT, GL_SPECULAR, [red, grn, blu, self.opacity])
 #        glMaterialfv(GL_FRONT, GL_SHININESS, [10])
