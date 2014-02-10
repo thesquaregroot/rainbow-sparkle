@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 import sys
+import random
 from rainbow import *
 from sparkle import *
 from math import sin, cos, radians
@@ -7,15 +8,13 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
-def getObjects():
-    return [Sparkle(), Rainbow()]
-
 class RSGlobals:
     zoom = 25
     xangle = 0
     yangle = 0
     time = 0
-    objects = getObjects()
+    sparkles = []
+    rainbows = []
     window_id = 0
     left_held = False
     right_held = False
@@ -50,9 +49,32 @@ def display():
     glLightfv(GL_LIGHT0, GL_SPECULAR, [1, 1, 1, 1])
     glEnable(GL_LIGHT0)
     glEnable(GL_LIGHTING)
+
+    # add new objects
+    xpos = random.random()*2 - 1 # -1 to 1
+    zpos = random.random()*2 - 1 # -1 to 1
+    ypos = 2                     # start above, fall
+    RSGlobals.sparkles.append(Sparkle(xpos, ypos, zpos))
+
+    if time % 50 == 0:
+        xpos = random.random()*1.5 - 0.75
+        ypos = random.random()*1.5 - 0.75
+        zpos = random.random()*1.5 - 0.75
+        RSGlobals.rainbows.append((Rainbow(), xpos, ypos, zpos))
     
-    for obj in RSGlobals.objects:
-        obj.render()
+    # display objects
+    for sparkle in RSGlobals.sparkles:
+        sparkle.render()
+        if sparkle.ypos < -1:
+            RSGlobals.sparkles.remove(sparkle)
+    
+    for rainbow in RSGlobals.rainbows:
+        glPushMatrix()
+        glTranslatef(rainbow[1], rainbow[2], rainbow[3])
+        rainbow[0].render()
+        glPopMatrix()
+        if time % 150 == 0:
+            RSGlobals.rainbows.pop(0)
     
     RSGlobals.time = time + 1
     glutSwapBuffers()

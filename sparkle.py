@@ -8,13 +8,16 @@ class Sparkle:
     bright_amb_and_diff  = [0.8, 0.8, 0.8, 1.0]
     bright_specular      = [0.8, 0.8, 0.8, 1.0]
     
-    def __init__(self):
+    def __init__(self, i=0, j=0, k=0):
         self.color = Sparkle.GOLD
         self.frame = 0
+        self.xpos = i
+        self.ypos = j
+        self.zpos = k
     
-    def render(self, i=0, j=0, k=0):
+    def render(self):
         glPushMatrix()
-        glTranslatef(i, j, k)
+        glTranslatef(self.xpos, self.ypos, self.zpos)
         glScalef(0.01, 0.01, 0.01)
         glRotatef(5*self.frame, 0, 1, 0)
         glRotatef(10*self.frame, 1, 0, 0)
@@ -28,4 +31,5 @@ class Sparkle:
         glEnd()
         glPopMatrix()
         self.frame += 1
+        self.ypos -= 0.05
 
