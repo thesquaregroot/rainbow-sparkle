@@ -6,9 +6,22 @@ from math import sin, cos, radians
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
+import random
 
 def getObjects():
-    return [Sparkle(), Rainbow()]
+    array = [Rainbow()]
+    for i in range(50):
+        array.append(Sparkle(float(i*2.0)/10.0 + 5.25, 0.1, -1))
+        array.append(Sparkle(-float(i*2.0)/10.0 - 5.25, 0.1, -1))
+        array.append(Sparkle(float(i*2.0)/10.0 + 5.25, 0.1, 1))
+        array.append(Sparkle(-float(i*2.0)/10.0 - 5.25, 0.1, 1))
+    for i in range(20):
+        array.append(Sparkle(15.25, 0.1, -1.0 + float(i)/10.0))
+        array.append(Sparkle(4.75, 0.1, -1.0 + float(i)/10.0))
+
+        array.append(Sparkle(-15.25, 0.1, -1.0 + float(i)/10.0))
+        array.append(Sparkle(-4.75, 0.1, -1.0 + float(i)/10.0))
+    return array
 
 class RSGlobals:
     zoom = 25
@@ -71,7 +84,7 @@ def reshape(width, height):
     glShadeModel(GL_SMOOTH)
 
 def keyboard(key, x, y):
-    if key == b'\x1b': # ESC
+    if key == b'\x1b' or key == 'q': # ESC or 'q'
         glutDestroyWindow(RSGlobals.window_id)
         sys.exit(0)
     glutPostRedisplay()
