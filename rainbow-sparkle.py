@@ -15,6 +15,7 @@ class RSGlobals:
     time = 0
     sparkles = []
     rainbows = []
+    rainbow_count = 6
     window_id = 0
     left_held = False
     right_held = False
@@ -35,8 +36,8 @@ def display():
     updateFromKeyboard()
     
     glLoadIdentity()
-    glClearColor(0, 0, 0, 0)
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
+    glClearColor(0, 0, 0, 1)
     
     gluLookAt(0, 0, -RSGlobals.zoom, 0, 0, 0, 0, 1, 0)
     glRotatef(RSGlobals.xangle, 0, 1, 0)
@@ -56,11 +57,12 @@ def display():
     ypos = 2                     # start above, fall
     RSGlobals.sparkles.append(Sparkle(xpos, ypos, zpos))
 
-    if time % 50 == 0:
-        xpos = random.random()*1.5 - 0.75
-        ypos = random.random()*1.5 - 0.75
-        zpos = random.random()*1.5 - 0.75
-        RSGlobals.rainbows.append((Rainbow(), xpos, ypos, zpos))
+    if time == 0:
+        for i in range(RSGlobals.rainbow_count):
+            xpos = random.random()*1.5 - 0.75
+            ypos = random.random()*1.5 - 0.75
+            zpos = random.random()*1.5 - 0.75
+            RSGlobals.rainbows.append((Rainbow(), xpos, ypos, zpos))
     
     # display objects
     for sparkle in RSGlobals.sparkles:
@@ -73,8 +75,6 @@ def display():
         glTranslatef(rainbow[1], rainbow[2], rainbow[3])
         rainbow[0].render()
         glPopMatrix()
-        if time % 150 == 0:
-            RSGlobals.rainbows.pop(0)
     
     RSGlobals.time = time + 1
     glutSwapBuffers()
