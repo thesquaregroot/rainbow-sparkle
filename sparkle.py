@@ -31,5 +31,4 @@ class Sparkle:
         glEnd()
         glPopMatrix()
         self.frame += 1
-        self.ypos -= 0.05
 
