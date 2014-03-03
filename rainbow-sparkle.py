@@ -9,18 +9,7 @@ from OpenGL.GLUT import *
 import random
 
 def getObjects():
-    array = [Rainbow()]
-    for i in range(50):
-        array.append(Sparkle(float(i*2.0)/10.0 + 5.25, 0.1, -1))
-        array.append(Sparkle(-float(i*2.0)/10.0 - 5.25, 0.1, -1))
-        array.append(Sparkle(float(i*2.0)/10.0 + 5.25, 0.1, 1))
-        array.append(Sparkle(-float(i*2.0)/10.0 - 5.25, 0.1, 1))
-    for i in range(20):
-        array.append(Sparkle(15.25, 0.1, -1.0 + float(i)/10.0))
-        array.append(Sparkle(4.75, 0.1, -1.0 + float(i)/10.0))
-
-        array.append(Sparkle(-15.25, 0.1, -1.0 + float(i)/10.0))
-        array.append(Sparkle(-4.75, 0.1, -1.0 + float(i)/10.0))
+    array = [SparklyRainbow()]
     return array
 
 class RSGlobals:

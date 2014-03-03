@@ -1,5 +1,6 @@
 from OpenGL.GL import *
 from math import sin, cos, radians
+from sparkle import Sparkle
 
 class Rainbow:
     DEFAULT_CENTRAL_ANGLE = 180
@@ -74,4 +75,24 @@ class Rainbow:
                 angle += increase
         glPopMatrix()
         glEnable(GL_LIGHTING)
+
+class SparklyRainbow(Rainbow):
+    def __init__(self, central_angle = Rainbow.DEFAULT_CENTRAL_ANGLE, inner_radius = Rainbow.DEFAULT_INNER_RADIUS, outer_radius = Rainbow.DEFAULT_OUTER_RADIUS, depth=Rainbow.DEFAULT_DEPTH, opacity=Rainbow.DEFAULT_OPACITY):
+        super().__init__(central_angle, inner_radius, outer_radius, depth, opacity)
+        self.sparkles = []
+        for i in range(50):
+            self.sparkles.append(Sparkle(float(i*2.0)/10.0 + 5.25, 0.1, -1))
+            self.sparkles.append(Sparkle(-float(i*2.0)/10.0 - 5.25, 0.1, -1))
+            self.sparkles.append(Sparkle(float(i*2.0)/10.0 + 5.25, 0.1, 1))
+            self.sparkles.append(Sparkle(-float(i*2.0)/10.0 - 5.25, 0.1, 1))
+        for i in range(20):
+            self.sparkles.append(Sparkle(15.25, 0.1, -1.0 + float(i)/10.0))
+            self.sparkles.append(Sparkle(4.75, 0.1, -1.0 + float(i)/10.0))
+            self.sparkles.append(Sparkle(-15.25, 0.1, -1.0 + float(i)/10.0))
+            self.sparkles.append(Sparkle(-4.75, 0.1, -1.0 + float(i)/10.0))
+    
+    def render(self):
+        super().render();
+        for sparkle in self.sparkles:
+            sparkle.render()
 
