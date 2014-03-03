@@ -12,14 +12,14 @@ class Sparkle:
     def __init__(self, i=0, j=0, k=0):
         self.color = Sparkle.GOLD
         self.frame = random.randint(0, 1024)
-        self.i = i
-        self.j = j
-        self.k = k
+        self.xpos = i
+        self.ypos = j
+        self.zpos = k
     
-    def render(self, i=0, j=0, k=0):
+    def render(self):
         glPushMatrix()
+        glTranslatef(self.xpos, self.ypos, self.zpos)
         glScalef(0.01, 0.01, 0.01)
-        glTranslatef(i + self.i, j + self.j, k + self.k)
         glRotatef(5*self.frame, 0, 1, 0)
         glRotatef(10*self.frame, 1, 0, 0)
         glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, [i*j for i,j in zip(self.color, Sparkle.bright_amb_and_diff)])

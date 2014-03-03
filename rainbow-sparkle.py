@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 import sys
+import random
 from rainbow import *
 from sparkle import *
 from math import sin, cos, radians
@@ -8,16 +9,14 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 import random
 
-def getObjects():
-    array = [SparklyRainbow()]
-    return array
-
 class RSGlobals:
     zoom = 25
     xangle = 0
     yangle = 0
     time = 0
-    objects = getObjects()
+    falling_sparkles = []
+    rainbows = []
+    rainbow_count = 6
     window_id = 0
     left_held = False
     right_held = False
@@ -38,8 +37,8 @@ def display():
     updateFromKeyboard()
     
     glLoadIdentity()
-    glClearColor(0, 0, 0, 0)
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
+    glClearColor(0, 0, 0, 1)
     
     gluLookAt(0, 0, -RSGlobals.zoom, 0, 0, 0, 0, 1, 0)
     glRotatef(RSGlobals.xangle, 0, 1, 0)
@@ -52,9 +51,35 @@ def display():
     glLightfv(GL_LIGHT0, GL_SPECULAR, [1, 1, 1, 1])
     glEnable(GL_LIGHT0)
     glEnable(GL_LIGHTING)
+
+    # add new objects
+    xpos = random.random()*2 - 1 # -1 to 1
+    zpos = random.random()*2 - 1 # -1 to 1
+    ypos = 2                     # start above, fall
+    RSGlobals.falling_sparkles.append(Sparkle(xpos, ypos, zpos))
+
+    if time == 0:
+        for i in range(RSGlobals.rainbow_count):
+            xpos = random.random()*1.5 - 0.75
+            ypos = random.random()*1.5 - 0.75
+            zpos = random.random()*1.5 - 0.75
+            RSGlobals.rainbows.append((Rainbow(), xpos, ypos, zpos))
     
-    for obj in RSGlobals.objects:
-        obj.render()
+    # display objects
+    for sparkle in RSGlobals.falling_sparkles:
+        sparkle.render()
+        sparkle.ypos -= 0.05
+        if sparkle.ypos < -2:
+            RSGlobals.falling_sparkles.remove(sparkle)
+    
+    glPushMatrix()
+    glRotate(RSGlobals.time, 0, 1, 0)
+    for rainbow in RSGlobals.rainbows:
+        glPushMatrix()
+        glTranslatef(rainbow[1], rainbow[2], rainbow[3])
+        rainbow[0].render()
+        glPopMatrix()
+    glPopMatrix()
     
     RSGlobals.time = time + 1
     glutSwapBuffers()

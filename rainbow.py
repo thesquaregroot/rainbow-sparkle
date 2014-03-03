@@ -15,7 +15,7 @@ class Rainbow:
     YELLOW = [1, 1, 0]
     GREEN = [0, 1, 0]
     BLUE = [0, 0, 1]
-    PURPLE = [0, 1, 1]
+    PURPLE = [1, 0, 1]
 
     COLORS = [RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE]
 
