@@ -63,7 +63,7 @@ def display():
             xpos = random.random()*1.5 - 0.75
             ypos = random.random()*1.5 - 0.75
             zpos = random.random()*1.5 - 0.75
-            RSGlobals.rainbows.append((Rainbow(), xpos, ypos, zpos))
+            RSGlobals.rainbows.append((SparklyRainbow(), xpos, ypos, zpos))
     
     # display objects
     for sparkle in RSGlobals.falling_sparkles:

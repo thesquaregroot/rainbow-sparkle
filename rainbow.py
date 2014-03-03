@@ -77,19 +77,32 @@ class Rainbow:
         glEnable(GL_LIGHTING)
 
 class SparklyRainbow(Rainbow):
+    EDGE_SPARKLES = 30
+    END_SPARKLES = 10
+    BUFFER_SPACE = 0.005
+
     def __init__(self, central_angle = Rainbow.DEFAULT_CENTRAL_ANGLE, inner_radius = Rainbow.DEFAULT_INNER_RADIUS, outer_radius = Rainbow.DEFAULT_OUTER_RADIUS, depth=Rainbow.DEFAULT_DEPTH, opacity=Rainbow.DEFAULT_OPACITY):
         super().__init__(central_angle, inner_radius, outer_radius, depth, opacity)
         self.sparkles = []
-        for i in range(50):
-            self.sparkles.append(Sparkle(float(i*2.0)/10.0 + 5.25, 0.1, -1))
-            self.sparkles.append(Sparkle(-float(i*2.0)/10.0 - 5.25, 0.1, -1))
-            self.sparkles.append(Sparkle(float(i*2.0)/10.0 + 5.25, 0.1, 1))
-            self.sparkles.append(Sparkle(-float(i*2.0)/10.0 - 5.25, 0.1, 1))
-        for i in range(20):
-            self.sparkles.append(Sparkle(15.25, 0.1, -1.0 + float(i)/10.0))
-            self.sparkles.append(Sparkle(4.75, 0.1, -1.0 + float(i)/10.0))
-            self.sparkles.append(Sparkle(-15.25, 0.1, -1.0 + float(i)/10.0))
-            self.sparkles.append(Sparkle(-4.75, 0.1, -1.0 + float(i)/10.0))
+        sparkle_distance = depth + SparklyRainbow.BUFFER_SPACE
+        for i in range(SparklyRainbow.EDGE_SPARKLES):
+            # along front and back edges
+            perc = float(i)/SparklyRainbow.EDGE_SPARKLES
+            # left side
+            self.sparkles.append(Sparkle(inner_radius + perc*(outer_radius-inner_radius)-SparklyRainbow.BUFFER_SPACE, 0, sparkle_distance))
+            self.sparkles.append(Sparkle(inner_radius + perc*(outer_radius-inner_radius)-SparklyRainbow.BUFFER_SPACE, 0, -sparkle_distance))
+            # right side
+            self.sparkles.append(Sparkle(-(inner_radius + perc*(outer_radius-inner_radius)+SparklyRainbow.BUFFER_SPACE), 0, sparkle_distance))
+            self.sparkles.append(Sparkle(-(inner_radius + perc*(outer_radius-inner_radius)+SparklyRainbow.BUFFER_SPACE), 0, -sparkle_distance))
+        for i in range(SparklyRainbow.END_SPARKLES):
+            # along outer end and inner end
+            perc = float(i)/SparklyRainbow.END_SPARKLES
+            # left side
+            self.sparkles.append(Sparkle(inner_radius-SparklyRainbow.BUFFER_SPACE, 0, sparkle_distance - perc*2*sparkle_distance))
+            self.sparkles.append(Sparkle(outer_radius+SparklyRainbow.BUFFER_SPACE, 0, sparkle_distance - perc*2*sparkle_distance))
+            # right side
+            self.sparkles.append(Sparkle(-inner_radius+SparklyRainbow.BUFFER_SPACE, 0, sparkle_distance - perc*2*sparkle_distance))
+            self.sparkles.append(Sparkle(-outer_radius-SparklyRainbow.BUFFER_SPACE, 0, sparkle_distance - perc*2*sparkle_distance))
     
     def render(self):
         super().render();
