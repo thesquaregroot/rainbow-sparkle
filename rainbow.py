@@ -8,7 +8,7 @@ class Rainbow:
     DEFAULT_OUTER_RADIUS = 0.15
     DEFAULT_DEPTH = 0.01
     DEFAULT_OPACITY = 0.8
-    RESOLUTION_ANGLE = 1
+    RESOLUTION_ANGLE = 2
     
     RED = [1, 0, 0]
     ORANGE = [1, 0.5, 0]
@@ -77,8 +77,8 @@ class Rainbow:
         glEnable(GL_LIGHTING)
 
 class SparklyRainbow(Rainbow):
-    EDGE_SPARKLES = 30
-    END_SPARKLES = 10
+    EDGE_SPARKLES = 25
+    END_SPARKLES = 5
     BUFFER_SPACE = 0.005
 
     def __init__(self, central_angle = Rainbow.DEFAULT_CENTRAL_ANGLE, inner_radius = Rainbow.DEFAULT_INNER_RADIUS, outer_radius = Rainbow.DEFAULT_OUTER_RADIUS, depth=Rainbow.DEFAULT_DEPTH, opacity=Rainbow.DEFAULT_OPACITY):

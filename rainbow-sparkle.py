@@ -16,7 +16,10 @@ class RSGlobals:
     time = 0
     falling_sparkles = []
     rainbows = []
-    rainbow_count = 6
+    rainbow_count = 15
+    sparkles_per_frame = 5
+    rotation_speed = 2
+    vantage_height_max = 0.2
     window_id = 0
     left_held = False
     right_held = False
@@ -53,10 +56,11 @@ def display():
     glEnable(GL_LIGHTING)
 
     # add new objects
-    xpos = random.random()*2 - 1 # -1 to 1
-    zpos = random.random()*2 - 1 # -1 to 1
-    ypos = 2                     # start above, fall
-    RSGlobals.falling_sparkles.append(Sparkle(xpos, ypos, zpos))
+    for i in range(RSGlobals.sparkles_per_frame):
+        xpos = random.random()*2 - 1 # -1 to 1
+        zpos = random.random()*2 - 1 # -1 to 1
+        ypos = 2                     # start above, fall
+        RSGlobals.falling_sparkles.append(Sparkle(xpos, ypos, zpos))
 
     if time == 0:
         for i in range(RSGlobals.rainbow_count):
@@ -73,7 +77,10 @@ def display():
             RSGlobals.falling_sparkles.remove(sparkle)
     
     glPushMatrix()
-    glRotate(RSGlobals.time, 0, 1, 0)
+    # rainbows rotating relative to the rest of the system
+    glRotate(RSGlobals.rotation_speed*RSGlobals.time, 0, 1, 0)
+    # sinusoidally vertically
+    glTranslatef(0, RSGlobals.vantage_height_max*sin(radians(RSGlobals.time)), 0)
     for rainbow in RSGlobals.rainbows:
         glPushMatrix()
         glTranslatef(rainbow[1], rainbow[2], rainbow[3])

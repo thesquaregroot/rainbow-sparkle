@@ -3,11 +3,11 @@ from OpenGL.GLUT import *
 import random
 
 class Sparkle:
-    GOLD    = [1, 0.5, 0, 1]
+    GOLD    = [1, 0.75, 0, 1]
     dull_amb_and_diff    = [0.1, 0.1, 0.1, 1.0]
     dull_specular        = [0.2, 0.2, 0.2, 1.0]
     bright_amb_and_diff  = [0.8, 0.8, 0.8, 1.0]
-    bright_specular      = [0.8, 0.8, 0.8, 1.0]
+    bright_specular      = [0.9, 0.9, 0.9, 1.0]
     
     def __init__(self, i=0, j=0, k=0):
         self.color = Sparkle.GOLD
