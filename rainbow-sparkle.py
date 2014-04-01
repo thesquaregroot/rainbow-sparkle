@@ -3,6 +3,7 @@ import sys
 import random
 from rainbow import *
 from sparkle import *
+from nyan import *
 from math import sin, cos, radians
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -16,6 +17,7 @@ class RSGlobals:
     time = 0
     falling_sparkles = []
     rainbows = []
+    nyan = Nyan()
     rainbow_count = 15
     sparkles_per_frame = 5
     rotation_speed = 2
@@ -70,6 +72,8 @@ def display():
             RSGlobals.rainbows.append((SparklyRainbow(), xpos, ypos, zpos))
     
     # display objects
+    RSGlobals.nyan.render()
+    
     for sparkle in RSGlobals.falling_sparkles:
         sparkle.render()
         sparkle.ypos -= 0.05
