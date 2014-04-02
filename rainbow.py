@@ -82,7 +82,7 @@ class SparklyRainbow(Rainbow):
     BUFFER_SPACE = 0.005
 
     def __init__(self, central_angle = Rainbow.DEFAULT_CENTRAL_ANGLE, inner_radius = Rainbow.DEFAULT_INNER_RADIUS, outer_radius = Rainbow.DEFAULT_OUTER_RADIUS, depth=Rainbow.DEFAULT_DEPTH, opacity=Rainbow.DEFAULT_OPACITY):
-        super().__init__(central_angle, inner_radius, outer_radius, depth, opacity)
+        Rainbow.__init__(self, central_angle, inner_radius, outer_radius, depth, opacity)
         self.sparkles = []
         sparkle_distance = depth + SparklyRainbow.BUFFER_SPACE
         for i in range(SparklyRainbow.EDGE_SPARKLES):
@@ -105,7 +105,7 @@ class SparklyRainbow(Rainbow):
             self.sparkles.append(Sparkle(-outer_radius-SparklyRainbow.BUFFER_SPACE, 0, sparkle_distance - perc*2*sparkle_distance))
     
     def render(self):
-        super().render();
+        Rainbow.render(self);
         for sparkle in self.sparkles:
             sparkle.render()
 

@@ -1,13 +1,15 @@
-#! /usr/bin/env python
+#! /usr/bin/env python2
 import sys
 import random
+import pygame
 from rainbow import *
 from sparkle import *
+from nyan import *
 from math import sin, cos, radians
+from pygame import mixer
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
-import random
 
 class RSGlobals:
     zoom = 25
@@ -16,6 +18,7 @@ class RSGlobals:
     time = 0
     falling_sparkles = []
     rainbows = []
+    nyan = Nyan()
     rainbow_count = 15
     sparkles_per_frame = 5
     rotation_speed = 2
@@ -70,15 +73,23 @@ def display():
             RSGlobals.rainbows.append((SparklyRainbow(), xpos, ypos, zpos))
     
     # display objects
+    # nyan cat
+    glPushMatrix()
+    # rotating around everything else
+    glRotatef(3*RSGlobals.time, 0, 1, 0)
+    glTranslatef(0, 0, -1)
+    RSGlobals.nyan.render()
+    glPopMatrix()
+    # sparkles
     for sparkle in RSGlobals.falling_sparkles:
         sparkle.render()
         sparkle.ypos -= 0.05
         if sparkle.ypos < -2:
             RSGlobals.falling_sparkles.remove(sparkle)
-    
+    #rainbows
     glPushMatrix()
-    # rainbows rotating relative to the rest of the system
-    glRotate(RSGlobals.rotation_speed*RSGlobals.time, 0, 1, 0)
+    # rotating relative to the rest of the system
+    glRotate(-RSGlobals.rotation_speed*RSGlobals.time, 0, 1, 0)
     # sinusoidally vertically
     glTranslatef(0, RSGlobals.vantage_height_max*sin(radians(RSGlobals.time)), 0)
     for rainbow in RSGlobals.rainbows:
@@ -141,6 +152,11 @@ if __name__ == "__main__":
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
     glutInitWindowSize(640, 640)
     RSGlobals.window_id = glutCreateWindow(b"Hello, Kate")
+    
+    pygame.init()
+    mixer.get_init()
+    mixer.music.load('sounds/nyancat.mp3')
+    mixer.music.play(-1)
     
     glutDisplayFunc(display)
     glutReshapeFunc(reshape)
