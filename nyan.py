@@ -1,4 +1,5 @@
 from OpenGL.GL import *
+from rainbow import Rainbow
 
 class Nyan:
     BLACK = [0, 0, 0]
@@ -8,7 +9,8 @@ class Nyan:
     GRAY = [0.6, 0.6, 0.6]
     WHITE = [1, 1, 1]
 
-    DEFAULT_WIDTH = 0.05
+    DEFAULT_WIDTH = 0.1
+    TRAIL_LENGTH = 5
     POP_TART = [
                     [None,  None,   BLACK,  BLACK,  BLACK,  BLACK,  BLACK,  BLACK,  BLACK,  BLACK,  BLACK,  BLACK,  BLACK,  BLACK,  BLACK,  BLACK,  BLACK,  BLACK,  BLACK,  None,   None],
                     [None,  BLACK,  BROWN,  BROWN,  BROWN,  BROWN,  BROWN,  BROWN,  BROWN,  BROWN,  BROWN,  BROWN,  BROWN,  BROWN,  BROWN,  BROWN,  BROWN,  BROWN,  BROWN,  BLACK,  None],
@@ -78,6 +80,27 @@ class Nyan:
                 [None,  BLACK, GRAY,   GRAY,    BLACK,  None,   BLACK,  GRAY,   GRAY,   BLACK,  None,   None,   None,   None,   None,   BLACK,  GRAY,   GRAY,   BLACK,  None,   None,   BLACK,  GRAY,   GRAY,   BLACK],
                 [None,  BLACK, BLACK,  BLACK,   None,   None,   None,   BLACK,  BLACK,  BLACK,  None,   None,   None,   None,   None,   None,   BLACK,  BLACK,  BLACK,  None,   None,   None,   BLACK,  BLACK,  None]
             ]
+
+    TRAILING_RAINBOW = [
+                            [Rainbow.RED,       Rainbow.RED,    Rainbow.RED,    Rainbow.RED,    Rainbow.RED,    Rainbow.RED,    Rainbow.RED],
+                            [Rainbow.RED,       Rainbow.RED,    Rainbow.RED,    Rainbow.RED,    Rainbow.RED,    Rainbow.RED,    Rainbow.RED],
+                            [Rainbow.RED,       Rainbow.RED,    Rainbow.RED,    Rainbow.RED,    Rainbow.RED,    Rainbow.RED,    Rainbow.RED],
+                            [Rainbow.ORANGE,    Rainbow.ORANGE, Rainbow.ORANGE, Rainbow.ORANGE, Rainbow.ORANGE, Rainbow.ORANGE, Rainbow.ORANGE],
+                            [Rainbow.ORANGE,    Rainbow.ORANGE, Rainbow.ORANGE, Rainbow.ORANGE, Rainbow.ORANGE, Rainbow.ORANGE, Rainbow.ORANGE],
+                            [Rainbow.ORANGE,    Rainbow.ORANGE, Rainbow.ORANGE, Rainbow.ORANGE, Rainbow.ORANGE, Rainbow.ORANGE, Rainbow.ORANGE],
+                            [Rainbow.YELLOW,    Rainbow.YELLOW, Rainbow.YELLOW, Rainbow.YELLOW, Rainbow.YELLOW, Rainbow.YELLOW, Rainbow.YELLOW],
+                            [Rainbow.YELLOW,    Rainbow.YELLOW, Rainbow.YELLOW, Rainbow.YELLOW, Rainbow.YELLOW, Rainbow.YELLOW, Rainbow.YELLOW],
+                            [Rainbow.YELLOW,    Rainbow.YELLOW, Rainbow.YELLOW, Rainbow.YELLOW, Rainbow.YELLOW, Rainbow.YELLOW, Rainbow.YELLOW],
+                            [Rainbow.GREEN,     Rainbow.GREEN,  Rainbow.GREEN,  Rainbow.GREEN,  Rainbow.GREEN,  Rainbow.GREEN,  Rainbow.GREEN],
+                            [Rainbow.GREEN,     Rainbow.GREEN,  Rainbow.GREEN,  Rainbow.GREEN,  Rainbow.GREEN,  Rainbow.GREEN,  Rainbow.GREEN],
+                            [Rainbow.GREEN,     Rainbow.GREEN,  Rainbow.GREEN,  Rainbow.GREEN,  Rainbow.GREEN,  Rainbow.GREEN,  Rainbow.GREEN],
+                            [Rainbow.BLUE,      Rainbow.BLUE,   Rainbow.BLUE,   Rainbow.BLUE,   Rainbow.BLUE,   Rainbow.BLUE,   Rainbow.BLUE],
+                            [Rainbow.BLUE,      Rainbow.BLUE,   Rainbow.BLUE,   Rainbow.BLUE,   Rainbow.BLUE,   Rainbow.BLUE,   Rainbow.BLUE],
+                            [Rainbow.BLUE,      Rainbow.BLUE,   Rainbow.BLUE,   Rainbow.BLUE,   Rainbow.BLUE,   Rainbow.BLUE,   Rainbow.BLUE],
+                            [Rainbow.PURPLE,    Rainbow.PURPLE, Rainbow.PURPLE, Rainbow.PURPLE, Rainbow.PURPLE, Rainbow.PURPLE, Rainbow.PURPLE],
+                            [Rainbow.PURPLE,    Rainbow.PURPLE, Rainbow.PURPLE, Rainbow.PURPLE, Rainbow.PURPLE, Rainbow.PURPLE, Rainbow.PURPLE],
+                            [Rainbow.PURPLE,    Rainbow.PURPLE, Rainbow.PURPLE, Rainbow.PURPLE, Rainbow.PURPLE, Rainbow.PURPLE, Rainbow.PURPLE]
+                        ]
     
     def __init__(self, pop_tart_width = DEFAULT_WIDTH):
         self.cube_width = float(pop_tart_width) / len(Nyan.POP_TART[0])
@@ -92,7 +115,8 @@ class Nyan:
         glVertex3f(-width,   -width,  -width)
         glVertex3f(0,       -width,  -width)
         # draw back of head (and then sides)
-        glColor3f(base_color[0], base_color[1], base_color[2])
+        if base_color != None:
+            glColor3f(base_color[0], base_color[1], base_color[2])
         glVertex3f(0,        0,       0)
         glVertex3f(-width,    0,       0)
         glVertex3f(-width,    -width,  0)
@@ -142,14 +166,14 @@ class Nyan:
         glDisable(GL_LIGHTING)
         glPushMatrix()
         # attempt to center nyan cat
-        glTranslate(pop_tart_width/2, pop_tart_height/2, 0)
+        glTranslate(pop_tart_width/2-self.pos*self.cube_width, pop_tart_height/2, 0)
         # draw pop tart
         self.draw_from_matrix(Nyan.POP_TART, self.cube_width, Nyan.BROWN)
         
         height_diff = pop_tart_height - face_height
         # move to head position
         glPushMatrix()
-        glTranslate(-(pop_tart_width - face_width*2/3 - pos_offset), -height_diff, -self.cube_width)
+        glTranslate(-(pop_tart_width - face_width*2/3), -height_diff+pos_offset, -self.cube_width)
         # draw head
         self.draw_from_matrix(Nyan.FACE, self.cube_width, Nyan.GRAY)
         glPopMatrix()
@@ -170,6 +194,17 @@ class Nyan:
         self.draw_from_matrix(feet, self.cube_width, Nyan.GRAY)
         glPopMatrix()
         
+        # rainbow
+        glPushMatrix()
+        glTranslate(len(Nyan.TRAILING_RAINBOW[0])*self.cube_width, pos_offset, 0)
+        self.draw_from_matrix(Nyan.TRAILING_RAINBOW, self.cube_width, None)
+        for i in range(Nyan.TRAIL_LENGTH):
+            glTranslate(len(Nyan.TRAILING_RAINBOW[0])*self.cube_width, (1-2*self.pos)*self.cube_width, 0)
+            self.draw_from_matrix(Nyan.TRAILING_RAINBOW, self.cube_width, None)
+            glTranslate(len(Nyan.TRAILING_RAINBOW[0])*self.cube_width, (2*self.pos-1)*self.cube_width, 0)
+            self.draw_from_matrix(Nyan.TRAILING_RAINBOW, self.cube_width, None)
+        glPopMatrix()
+
         glPopMatrix()
         glEnable(GL_LIGHTING)
         
